@@ -1,0 +1,5 @@
+# Exclude our virtual environment and all compiled python files
+
+virtual/
+*.pyc
+/instance
