@@ -1,5 +1,6 @@
 #importing Flask class
-from flask import Flask  
+from flask import Flask
+from flask_bootstrap import Bootstrap
 from .config import DevConfig
 
 # Initialize the application
@@ -9,6 +10,10 @@ app = Flask(__name__, instance_relative_config = True)
 app.config.from_object(DevConfig)
 app.config.from_pyfile('config.py')
 
-# Importing views to allow us to create views
-from app import views   
+# Initalize bootstrap
+bootstrap = Bootstrap(app)
+
+# Importing views to allow us to create views & error for error handling
+from app import views
+from app import error
 

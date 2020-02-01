@@ -3,27 +3,42 @@
 
 <!-- Styles block -->
 {% block styles %}
-   {{ super() }}
-   <link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}">
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}">
 {% endblock %}
 
 {% block content %}
-<!--Popular Movies Section -->
-<h3>Popular Movies</h3>
-<ul>
-   {{macro.displayMovieList(popular)}}
-</ul>
 
-<!--Upcoming Movies Section -->
-<h3>Upcoming Movies</h3>
-<ul>
-   {{macro.displayMovieList(upcoming)}}
-</ul>
+<div class="container">
+   <!-- Search Form -->
+   <div class="container">
+      <form>
+         <input type="text" name="movie_query" placeholder="Search for a Movie" class="form-control"> </br>
+         <input type="submit" value="Submit" class="btn btn-default form-control">
+      </form>
 
-<!--Now Playing Movies Section -->
-<h3>Now Playing Movies</h3>
-<ul>
-   {{macro.displayMovieList(now_playing)}}
-</ul>
+   </div>
+
+   <!--Popular Movies Section -->
+   <h3 style="text-align: center">Popular Movies</h3>
+   <div class="container">
+      {{macro.displayMovieList(popular)}}
+   </div>
+
+   <!--Upcoming Movies Section -->
+   <h3 style="text-align: center">Upcoming Movies</h3>
+   <div class='container'>
+      {{macro.displayMovieList(upcoming)}}
+   </div>
+
+
+
+   <!--Now Playing Movies Section -->
+   <h3 style="text-align: center">Now Playing Movies</h3>
+   <div class="container">
+      {{macro.displayMovieList(now_playing)}}
+   </div>
+
+</div>
 
 {% endblock%}
