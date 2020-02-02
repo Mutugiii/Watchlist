@@ -1,16 +1,32 @@
+class Movie:
+    '''
+    Class for the movie to define movie objects
+    '''
+    def __init__(self,id,title,overview,poster,vote_average,vote_count):
+        '''
+        Initialize class variable objects
+        '''
+        self.id = id
+        self.title = title
+        self.overview = overview
+        self.poster = 'https://image.tmdb.org/t/p/w500/'+ poster
+        self.vote_average = vote_average
+        self.vote_count = vote_count
+
+
 class Review:
-    
+
     all_reviews = []
-    
+
     def __init__(self,movie_id,title,imageurl,review):
         self.movie_id = movie_id
         self.title = title
         self.imageurl = imageurl
         self.review = review
-        
+
     def save_review(self):
         self.all_reviews.append(self)
-        
+
     @classmethod
     def clear_review(cls):
         Review.all_reviews.clear()

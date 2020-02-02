@@ -1,19 +1,29 @@
 #importing Flask class
 from flask import Flask
 from flask_bootstrap import Bootstrap
-from .config import DevConfig
-
-# Initialize the application
-app = Flask(__name__, instance_relative_config = True)
-
-# Setting up Configuration
-app.config.from_object(DevConfig)
-app.config.from_pyfile('config.py')
+from config import config_options
 
 # Initalize bootstrap
-bootstrap = Bootstrap(app)
+bootstrap = Bootstrap()
 
-# Importing views to allow us to create views & error for error handling
-from app import views
-from app import error
+# App factory function
+def create_app(config_name):
+    # Initialize the application
+    app = Flask(__name__)
+    
+    # Creating app Configuration
+    app.config.from_object(config_options[config_name])
+
+    # Initialize flask extensions
+    bootstrap.init_app(app)
+    
+    # Registering a blueprint
+    from .main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
+
+    # Setting up config
+    from .request import configure_request
+    configure_request(app)
+
+    return app
 
