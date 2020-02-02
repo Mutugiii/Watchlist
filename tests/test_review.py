@@ -29,9 +29,9 @@ class ReviewTest(unittest.TestCase):
         '''
         Test if class is initialized correctly
         '''
-        self.assertEqual(self.new_movie.id,454)
-        self.assertEqual(self.new_movie.title,'Hello movies')
-        self.assertEqual(self.new_movie.imageurl,"https://img.com")
-        self.assertEqual(self.new_movie.review,"user review")
+        self.assertEqual(self.new_review.movie_id,454)
+        self.assertEqual(self.new_review.title,'Hello movies')
+        self.assertEqual(self.new_review.imageurl,"https://img.com")
+        self.assertEqual(self.new_review.review,"user review")
 
 
