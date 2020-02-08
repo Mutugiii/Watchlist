@@ -1,11 +1,12 @@
 # Searches for templates in the directory named templates
-from flask import render_template,request, redirect, url_for
+from flask import render_template, request, redirect, url_for, abort
 # Imports
 from . import main
 from ..request import get_movies, get_movie, search_movie
-from ..models import Review
-from .forms import ReviewForm
+from ..models import Review, User
+from .forms import ReviewForm, UpdateProfile
 from flask_login import login_required
+from .. import db, photos
 
 # The views
 @main.route('/')
@@ -16,13 +17,13 @@ def index():
     popular_movies = get_movies('popular')
     upcoming_movies = get_movies('upcoming')
     now_playing_movies = get_movies('now_playing')
-    
+
     title = 'Home - Welcome to The best Movie Review Website Online'
 
     search_movie = request.args.get('movie_query')
 
     if search_movie:
-        return redirect(url_for('.search',movie_name = search_movie))
+        return redirect(url_for('.search', movie_name=search_movie))
     else:
         return render_template('index.html', title=title, popular=popular_movies, upcoming=upcoming_movies, now_playing=now_playing_movies)
 
@@ -35,7 +36,7 @@ def movie(id):
     movie = get_movie(id)
     title = f'{movie.title}'
     reviews = Review.get_reviews(movie.id)
-    return render_template('movie.html', title=title, movie=movie, reviews = reviews)
+    return render_template('movie.html', title=title, movie=movie, reviews=reviews)
 
 
 @main.route('/search/<movie_name>')
@@ -47,10 +48,10 @@ def search(movie_name):
     movie_name_format = "+".join(movie_name_list)
     searched_movie = search_movie(movie_name_format)
     # title = f'Search result for {movie_name}'
-    return render_template('search.html', movies = searched_movie)
+    return render_template('search.html', movies=searched_movie)
 
 
-@main.route('/movie/review/new/<int:id>', methods = ['GET', 'POST'])
+@main.route('/movie/review/new/<int:id>', methods=['GET', 'POST'])
 @login_required
 def new_review(id):
     form = ReviewForm()
@@ -59,10 +60,45 @@ def new_review(id):
     if form.validate_on_submit():
         title = form.title.data
         review = form.review.data
-        new_review = Review(movie.id,title,movie.poster,review)
+        new_review = Review(movie.id, title, movie.poster, review)
         new_review.save_review()
-        return redirect(url_for('.movie', id = movie.id ))
+        return redirect(url_for('.movie', id=movie.id))
 
-    title = f'{movie.title} review' 
-    return render_template('new_review.html', title = title, review_form = form, movie = movie)
+    title = f'{movie.title} review'
+    return render_template('new_review.html', title=title, review_form=form, movie=movie)
 
+
+@main.route('/user/<uname>')
+def profile(uname):
+    user = User.query.filter_by(username=uname).first()
+    if user is None:
+        abort(404)
+    return render_template('profile/profile.html', user=user)
+
+@main.route('/user/<uname>/update', methods = ['GET','POST'])
+@login_required
+def update_profile(uname):
+    user = User.query.filter_by(username = uname).first()
+    if user is None:
+        abort(404)
+    form = UpdateProfile()
+
+    if form.validate_on_submit():
+        user.bio = form.bio.data
+
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('.profile', uname = user.username))
+
+    return render_template('profile/update.html', form = form)
+
+@main.route('/user/<uname>/update/pic', methods=['POST'])
+@login_required
+def updatePic(uname):
+    user = User.query.filter_by(username=uname).first()
+    if 'photo' in request.files:
+        filename = photos.save(request.files['photo'])
+        path = f'photos/{filename}'
+        user.profile_pic_path = path
+        db.session.commit
+    return redirect(url_for('main.profile', uname=uname))

@@ -12,6 +12,16 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
+            </ul>
+            <ul class="navbar navbar-nav navbar-right">
+                {% if current_user.is_authenticated %}
+                <span style="font-size: 22px;"></span><a
+                    href="{{url_for('main.profile',uname = current_user.username)}}">Profile</a></span>
+                <span style="font-size: 22px;"></span><a href="{{url_for('auth.logout')}}">Sign out</a></span>
+                {% else %}
+                <span style="font-size: 22px;"><a href="{{url_for('auth.login')}}">Sign In</a></span>
+                {% endif %}
+            </ul>
         </div>
 
     </div>
