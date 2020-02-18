@@ -5,7 +5,7 @@ from . import main
 from ..request import get_movies, get_movie, search_movie
 from ..models import Review, User
 from .forms import ReviewForm, UpdateProfile
-from flask_login import login_required
+from flask_login import login_required, current_user
 from .. import db, photos
 
 # The views
@@ -60,7 +60,8 @@ def new_review(id):
     if form.validate_on_submit():
         title = form.title.data
         review = form.review.data
-        new_review = Review(movie.id, title, movie.poster, review)
+
+        new_review = Review(movie_id=movie.id,movie_title=title,image_path=movie.poster,movie_review=review,user=current_user)
         new_review.save_review()
         return redirect(url_for('.movie', id=movie.id))
 
@@ -75,10 +76,11 @@ def profile(uname):
         abort(404)
     return render_template('profile/profile.html', user=user)
 
-@main.route('/user/<uname>/update', methods = ['GET','POST'])
+
+@main.route('/user/<uname>/update', methods=['GET', 'POST'])
 @login_required
 def update_profile(uname):
-    user = User.query.filter_by(username = uname).first()
+    user = User.query.filter_by(username=uname).first()
     if user is None:
         abort(404)
     form = UpdateProfile()
@@ -88,10 +90,11 @@ def update_profile(uname):
 
         db.session.add(user)
         db.session.commit()
-        
-        return redirect(url_for('.profile', uname = user.username))
 
-    return render_template('profile/update.html', form = form)
+        return redirect(url_for('.profile', uname=user.username))
+
+    return render_template('profile/update.html', form=form)
+
 
 @main.route('/user/<uname>/update/pic', methods=['POST'])
 @login_required

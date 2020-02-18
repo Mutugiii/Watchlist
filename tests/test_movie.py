@@ -13,29 +13,24 @@ class MovieTest(unittest.TestCase):
         '''
         So as to set up the tests correctly before they run
         '''
-        self.new_movie = Movie(234, 'Python Must Be Crazy', 'A thrilling new Python Series', 'khsjha27hbs', 8.5, 129993)
-
-    def tearDown(self):
-        '''
-        To clean up after each test is run
-        '''
-        #self.new_movie = Movie(0,'','','',0,0)
+        self.new_movie = Movie(234, 'Python Must Be Crazy',
+                               'A thrilling new Python Series', 'khsjha27hbs', 8.5, 129993)
 
     def test_instance(self):
         '''
         Test that it is an instance of a Movie class
         '''
-        self.assertTrue(isinstance(self.new_movie,Movie))
-    
+        self.assertTrue(isinstance(self.new_movie, Movie))
+
     def test_init(self):
         '''
         Test if class is initialized correctly
         '''
-        self.assertEqual(self.new_movie.id,234)
-        self.assertEqual(self.new_movie.title,'Python Must Be Crazy')
-        self.assertEqual(self.new_movie.overview,'A thrilling new Python Series')
-        self.assertEqual(self.new_movie.poster,'https://image.tmdb.org/t/p/w500/khsjha27hbs')
-        self.assertEqual(self.new_movie.vote_average,8.5)
-        self.assertEqual(self.new_movie.vote_count,129993)
-
-
+        self.assertEqual(self.new_movie.id, 234)
+        self.assertEqual(self.new_movie.title, 'Python Must Be Crazy')
+        self.assertEqual(self.new_movie.overview,
+                         'A thrilling new Python Series')
+        self.assertEqual(self.new_movie.poster,
+                         'https://image.tmdb.org/t/p/w500/khsjha27hbs')
+        self.assertEqual(self.new_movie.vote_average, 8.5)
+        self.assertEqual(self.new_movie.vote_count, 129993)
